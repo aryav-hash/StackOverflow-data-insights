@@ -19,7 +19,6 @@ resource "google_storage_bucket" "auto-expire" {
   location      = "us-central1"
   storage_class = "STANDARD"
   force_destroy = true
-
   lifecycle_rule {
     condition {
       age = 1
@@ -28,4 +27,13 @@ resource "google_storage_bucket" "auto-expire" {
       type = "AbortIncompleteMultipartUpload"
     }
   }
+}
+
+resource "google_bigquery_dataset" "stackoverflow_stg" {
+  dataset_id = "stackoverflow_stg"
+  location   = "us-central1"
+}
+resource "google_bigquery_dataset" "analytics" {
+  dataset_id = "analytics"
+  location   = "us-central1"
 }
