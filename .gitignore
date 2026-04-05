@@ -48,3 +48,5 @@ terraform.rc
 # Service Account Keys
 keys/
 *.json
+
+.bruin.yml

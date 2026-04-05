@@ -16,7 +16,8 @@ provider "google" {
 
 resource "google_storage_bucket" "auto-expire" {
   name          = "airport-dashboard-492216-bucket"
-  location      = "US"
+  location      = "us-central1"
+  storage_class = "STANDARD"
   force_destroy = true
 
   lifecycle_rule {
@@ -26,13 +27,5 @@ resource "google_storage_bucket" "auto-expire" {
     action {
       type = "AbortIncompleteMultipartUpload"
     }
-  }
-}
-
-# this is to store the
-terraform {
-  backend "gcs" {
-    bucket = "airport-dashboard-492216-bucket"
-    prefix = "terraform/state"
   }
 }
