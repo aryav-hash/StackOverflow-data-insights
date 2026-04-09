@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: stackoverflow_raw
+    database: airport-dashboard-492216
+    schema: stackoverflow_stg
+    tables:
+      - name: stg_salary_exp_2025
+        columns:
+          - name: Country
+            tests:
+              - not_null
+      - name: stg_market_share_2025
+        columns:  
+          - name: DevType
+            tests:
+              - not_null
+          - name: Language
+            tests:  
+              - not_null
