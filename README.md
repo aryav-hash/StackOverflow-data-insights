@@ -9,12 +9,17 @@ Every year StackOverflow takes a survey from it's users to gather data about the
 
  The above metric is used to display a bar chart to show the popularity of that technology. Here the chart is only concerned with different programming languages.
 
-## 2. Average yearly compensation to different employees based on experience in different countries:
- Here we explore the average compensation given to employees in different countries based on their experience. The experience is categorized as :-
- - (0-2) : Junior
- - (3-5) : Mid Level
- - (6-10) : Senior
- - (10-12) : Lead/Principal
+### 2. Global Compensation Benchmarks
+An exploration of average yearly compensation ($USD$) mapped against professional experience across different geographic regions. Experience is clustered into four distinct career stages:
+
+| Experience (Years) | Career Level |
+| :--- | :--- |
+| **0 – 2** | Junior |
+| **3 – 5** | Mid-Level |
+| **6 – 10** | Senior |
+| **10 – 12** | Lead / Principal |
+
+---
 
 ## ✨ Features
 - **Fast:** Optimized for performance.
