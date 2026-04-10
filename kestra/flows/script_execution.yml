@@ -1,0 +1,16 @@
+id: script_execution
+namespace: zoomcamp-project
+
+tasks:
+  - id: run_spark_transform
+    type: io.kestra.plugin.gcp.dataproc.batches.PySparkSubmit
+    projectId: "{{kv('GCP_PROJECT_ID')}}"
+    region: "{{ kv('GCP_LOCATION_ID') }}"
+    name: "stackoverflow-transform-{{ execution.id }}"
+    mainPythonFileUri: "gs://{{ kv('GCP_BUCKET_NAME') }}/scripts/production_script.py"
+    
+    args:
+      - "{{ kv('GCP_BUCKET_NAME') }}"
+      - "2025"
+    
+    serviceAccount: "{{ secret('GCPCREDS') }}"

@@ -1,0 +1,31 @@
+id: upload_to_gcs
+namespace: zoomcamp-project
+
+description: We are going to be uploading our the stack overflow survey 2025 data to the Google Cloud bucket.
+
+tasks:
+  - id: download_zip
+    type: io.kestra.plugin.core.http.Download
+    uri: "https://survey.stackoverflow.co/datasets/stack-overflow-developer-survey-2025.zip"
+  
+  - id: unzip_data
+    type: io.kestra.plugin.scripts.shell.Commands
+    containerImage: alpine 
+    commands:
+      - apk add --no-cache unzip
+      - unzip {{ outputs.download_zip.uri }} -d survey_data/
+    outputFiles:
+      - "survey_data/survey_results_public.csv"
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.unzip_data.outputFiles['survey_data/survey_results_public.csv'] }}"
+    to: "gs://{{kv('GCP_BUCKET_NAME')}}/raw/survey/2025/results.csv"
+    serviceAccount: "{{ secret('GCPCREDS') }}"
+    projectId: "{{kv('GCP_PROJECT_ID')}}"
+
+  - id: log_success
+    type: io.kestra.plugin.core.log.Log
+    message: "Pipeline completed!"
+
+
