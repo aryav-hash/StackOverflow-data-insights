@@ -1,8 +1,20 @@
 # StackOverflow-survey-insights
 
-> Every year StackOverflow does a survey where it collects different information from users.
+Every year StackOverflow takes a survey from it's users to gather data about the technical job market and the recent trends seen in that particular year. This project focuses on using the survey data of the year 2025 to generate charts on the following :-
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+## 1. Market Share of a Technology:
+ Experts use various kinds of technologies to work in their domain. This metric discovers what are the most popular tools/languages being used by industry experts based on the number of respondants using that particular technology, divided by the total number of respondants of that domain.
+
+ **Market Share = Respondants using that technology / Total number of respondants**
+
+ The above metric is used to display a bar chart to show the popularity of that technology. Here the chart is only concerned with different programming languages.
+
+## 2. Average yearly compensation to different employees based on experience in different countries:
+ Here we explore the average compensation given to employees in different countries based on their experience. The experience is categorized as :-
+ - (0-2) : Junior
+ - (3-5) : Mid Level
+ - (6-10) : Senior
+ - (10-12) : Lead/Principal
 
 ## ✨ Features
 - **Fast:** Optimized for performance.
