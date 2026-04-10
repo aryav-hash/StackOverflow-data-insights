@@ -21,15 +21,22 @@ An exploration of average yearly compensation ($USD$) mapped against professiona
 
 ---
 
-## ✨ Features
-- **Fast:** Optimized for performance.
-- **Easy to use:** Minimal configuration required.
-- **Scalable:** Built with modern architecture in mind.
+## 🛠️ Tech Stack & Architecture
 
-## 🛠️ Tech Stack
-- **Backend:** Python (FastAPI/Flask)
-- **Data:** PySpark, BigQuery, dbt
-- **Infras:** Docker, Terraform
+The project implements a robust data pipeline to handle the complexities of survey data:
+
+* **Orchestration:** [Kestra](https://kestra.io/) (Pipeline management)
+* **Processing:** [PySpark](https://spark.apache.org/docs/latest/api/python/index.html) (Data cleaning & flattening multi-value columns)
+* **Data Warehouse:** [Google BigQuery](https://cloud.google.com/bigquery)
+* **Transformation:** [dbt](https://www.getdbt.com/) (Modular SQL modeling and documentation)
+* **Visualization:** [Looker Studio](https://lookerstudio.google.com/)
+* **Infrastructure as Code:** [Terraform](https://www.terraform.io/)
+* **Containerization:** [Docker](https://www.docker.com/)
+
+---
+
+## ✨ Features & Details of the project
+
 
 ## 🚀 Getting Started
 
