@@ -204,3 +204,7 @@ To visualize the data, follow these steps to connect your BigQuery Marts:
 
 3. Choose My Projects > [PROJECT_ID] > analytics > fct_tech_market_share.
 Ensure the MarketSharePct field is set to a "Percent" type and use Median for salary metrics to avoid outlier skewing.
+
+The working code has been provided in their respective directories. If you encounter any difficulty in the setup, try to use AI or review the data-engineering-zoomcamp-course-2026 by [DataTalksClub](https://github.com/DataTalksClub/data-engineering-zoomcamp). The project has been implemented in the same way as shown in the zoomcamp.
+
+I would like to thank the DataTalksClub team for organizing this zoomcamp. I learnt a lot from them !
