@@ -66,6 +66,8 @@ The project implements a robust data pipeline to handle the complexities of surv
 
  ### Phase-6: Building the charts in Looker Studio
  Since the analytics data had been setup, we went ahead and connected it to the Looker Studio of Google Cloud. Here after importing the data for representation two charts were made. The first chart made our of fct_tech_market share.sql is a column based bar chart that explores the market share of different languages for different roles in the industry. The second chart is a heatmap that shows the avg salary for different experience groups of developers in different countries.
+
+ ![alt text](<Screenshot from 2026-04-11 11-28-47.png>)
  
 ## 🚀 Getting Started
 
