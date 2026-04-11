@@ -35,6 +35,8 @@ The project implements a robust data pipeline to handle the complexities of surv
 * **Infrastructure as Code:** [Terraform](https://www.terraform.io/)
 * **Containerization:** [Docker](https://www.docker.com/)
 
+ ![alt text](<screenshots/medallion.png>)
+
 ---
 
 ## 🔬 Key Features
@@ -96,6 +98,24 @@ The project implements a robust data pipeline to handle the complexities of surv
 
 Follow these steps to replicate the environment and execute the pipeline from scratch.
 
+## 🔐 Environment Management
+
+This project utilizes `.env` and `.envrc` files to securely manage credentials and automate environment configuration.
+
+### Environment Variables (`.env`)
+Create a `.env` file in the root directory to store sensitive configuration. This file is used by Python scripts and the dbt wrapper to authenticate with GCP.
+
+**Example `.env` template:**
+```text
+GCP_PROJECT_ID=your-project-id-here
+GCP_REGION=us-central1
+GCP_KEYFILE_PATH=/absolute/path/to/service-account-key.json
+DBT_PROFILES_DIR=./  # Optional: point dbt to a local profile
+```
+
+There are several key-value pairs written for kestra as well. Look for the variables inside of the code and do the setup accordingly.
+For environment variable use **direnv**:
+
 ### 1. Prerequisites
 * **Python 3.12+** (Managed via `uv`)
 * **Google Cloud CLI (gcloud)** authenticated to your account.
@@ -131,13 +151,56 @@ Run the following commands in your terminal to configure the necessary GCP resou
 
    gcloud iam service-accounts keys create keys/service-account-key.json \
       --iam-account=stackoverflow-loader@[PROJECT_ID].iam.gserviceaccount.com
+```
+The project uses UV for fast, reproducible dependency management :-
 
+```` bash
    # Install dependencies
-   uv sync
+      uv sync
 
    # Activate virtual environment
-   source .venv/bin/activate
+      source .venv/bin/activate
+````
 
-```
+
 #### B. Setting dbt profile config
+dbt requires a profiles.yml file to connect to BigQuery. For reproducibility, create this file at ~/.dbt/profiles.yml:
+``` bash
+   stackoverflow_analytics:
+   outputs:
+      dev:
+         type: bigquery
+         method: service-account
+         project: [PROJECT_ID]
+         dataset: analytics
+         threads: 4
+         keyfile: /path/to/your/keys/service-account-key.json
+         location: us-central1 # Ensure this matches your BQ dataset location
+         priority: interactive
+   target: dev
+```
 
+#### C. Execution
+**Raw Ingestion:** Upload the survey CSV to your GCS bucket. The kestra flows have been provided in the kestra directory.
+
+**Spark Transformation:** Submit the PySpark job to Dataproc (or run via the Kestra orchestrator) to populate the stackoverflow_stg dataset.
+
+**dbt Modeling:**
+``` bash
+   # Verify connection
+   dbt debug
+
+   # Run and test all models
+   dbt build
+```
+
+#### D. Connecting Looker Studio
+
+To visualize the data, follow these steps to connect your BigQuery Marts:
+
+1. Open Looker Studio and create a New Report.
+
+2. Select BigQuery as the Data Source.
+
+3. Choose My Projects > [PROJECT_ID] > analytics > fct_tech_market_share.
+Ensure the MarketSharePct field is set to a "Percent" type and use Median for salary metrics to avoid outlier skewing.
