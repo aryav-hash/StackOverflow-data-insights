@@ -41,12 +41,12 @@ The project implements a robust data pipeline to handle the complexities of surv
  The data pipeline is based on batch processing using **ELT (Extract-Load-Transform) workflow**.
 
  ### Phase-1: IaC
- The data lake (Google Cloud Storage) was setup for the project. The resources accessed through Terraform are the Google Cloud Storage Bucket named **"airport-dashboard-492216"** and two datasets were made inside this bucket on the BigQuery, named stackoverflow_stg and analytics. The stackoverflow_stg dataset, as the name suggests is for the staging tables that contain the raw data inside of them, and the analytics dataset contains the final tables which would be used in dbt to make the respective models for the charts.
+ The data lake (Google Cloud Storage) was setup for the project. The resources accessed through Terraform are the Google Cloud Storage Bucket named **"airport-dashboard-492216"** and two datasets were made inside this bucket on the BigQuery, named StackOverflow_stg and analytics. The StackOverflow_stg dataset, as the name suggests is for the staging tables that contain the raw data inside of them, and the analytics dataset contains the final tables which would be used in dbt to make the respective models for the charts.
 
  > The name airport-dashboard is not a suitable name for a bucket used in this project. The project was going to be about an  airport dashboard initially which is why it was named that way however, I dropped that idea and adopted this one.
 
  ### Phase-2: Workflow Orchestration
- Kestra was used to create a flow named **upload_to_gcs.yml** that can put the respective data files we need for the project onto the bucket. The flow consists of installing the data in the form of a .csv file from stackoverflow's website and then uploading it onto the Google Cloud Bucket. The flow is only concerned with the stackoverflow's 2025 survey data, but it can be tweaked to upload the data of the previous years as well.
+ Kestra was used to create a flow named **upload_to_gcs.yml** that can put the respective data files we need for the project onto the bucket. The flow consists of installing the data in the form of a .csv file from StackOverflow's website and then uploading it onto the Google Cloud Bucket. The flow is only concerned with the StackOverflow's 2025 survey data, but it can be tweaked to upload the data of the previous years as well.
 
  ### Phase-3: Spark Transformations
  After the upload of data to the bucket, we connect spark directly to the data stored in the bucket so that we can access the data and perform the relevant transformations. We connect to the data kept in the bucket in the same way as shown in the zoomcamp course. Spark was used to write two notebooks, the first one is the testing.ipynb kept in the spark/notebooks directory. Here, the data was explored and a smaller dataframe (around 1000) was used to test the transformations we wanted to do to the data.
@@ -58,7 +58,14 @@ The project implements a robust data pipeline to handle the complexities of surv
  After the testing, a production script was written with the logic explored in the testing script.
 
  ### Phase-4: Building the staging tables
- The production script was used to generate the staging tables using the **Dataproc Serverless Cluster** in Google Cloud. Kestra automated this by executing another flow contained in **script_execution.yml** file. The production_script was made into a python script and then uploaded to the cloud for execution.
+ The production script was used to generate the staging tables using the **Dataproc Serverless Cluster** in Google Cloud. Kestra automated this by executing another flow contained in **script_execution.yml** file. The production_script was made into a python script and then uploaded to the cloud for execution. There are various benefits of using the Dataproc Serverless Cluster on GCP. The storage and compute are separated in the Google Cloud which is better than a local cluster where the data lives on the same compute nodes. The cluster is ephemeral, meaning that it doesn't run 24/7 instead it only runs for the time when we need to do computation and then it shuts down. In order to use this service, we need to setup a service account with the relevant permissions. These were configured using the **gcloud CLI**.
+
+ ### Phase-5: Using DBT to build the models
+ After the execution of the script, we got two staging tables in our BigQuery named **stg_market_share_2025** and **stg_salary_exp_2025**. DBT CLI was used to connect to the BigQuery instance and in our models (dbt/analytics/models/staging) we wrote two models named stg_market_share.sql and stg_salary_exp.sql which contains tables that we planned through our script in phase-3. Using these we made the fct_salary_benchmark.sql and fct_tech_market_share.sql marts. In fct_salary_benchmark.sql we selected the records that had salary greater than $500 and also classified different experience groups based on the number of years the person had worked in the industry. Here the data was clustered by experience level and country. In fct_tech_market_share.sql we clustered the data by developer role and selected all the columns.
+ By running **dbt build** we were able to get the specific models in the analytics dataset of our GCP.
+
+ ### Phase-6: Building the charts in Looker Studio
+ Since the analytics data had been setup, we went ahead and connected it to the Looker Studio of Google Cloud. Here after importing the data for representation two charts were made. The first chart made our of fct_tech_market share.sql is a column based bar chart that explores the market share of different languages for different roles in the industry. The second chart is a heatmap that shows the avg salary for different experience groups of developers in different countries.
  
 ## 🚀 Getting Started
 
