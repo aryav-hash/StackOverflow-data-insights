@@ -94,6 +94,34 @@ The project implements a robust data pipeline to handle the complexities of surv
  **Tile2**
  ![alt text](<screenshots/tile2.png>)
 
+---
+
+## 📈 Future Roadmap & Potential Improvements
+
+To evolve this project into a production-grade enterprise platform, the following enhancements are proposed:
+
+### 1. Advanced Observability & Data Quality
+* **dbt-expectations:** Implement the `dbt-expectations` package to perform more complex data validation (e.g., checking if salary distributions follow a logical Bell Curve).
+* **Elementary Data:** Integrate **Elementary** for real-time Slack/Discord alerts if a pipeline fails or if data volume drops unexpectedly during an ingestion cycle.
+
+### 2. CI/CD & Automated Testing
+* **dbt Cloud / GitHub Actions:** Implement a **Slim CI** workflow. This would automatically trigger `dbt clone` and `dbt test` on pull requests, ensuring that new code changes don't break existing "Gold" models before they reach production.
+
+### 3. Multi-Year Trend Analysis
+* **Historical Benchmarking:** Expand the pipeline to ingest Stack Overflow survey data from 2020–2024. This would allow for **Year-over-Year (YoY) growth metrics**, tracking how specific languages (like Rust or Mojo) are rising in popularity over time.
+
+### 4. Advanced Orchestration & Infrastructure
+* **Dataproc Serverless:** Transition from standard clusters to **Dataproc Serverless (Batches)** to further reduce operational overhead and ensure zero-cost when the pipeline is idle.
+* **Terraform (IaC):** Fully codify the GCP infrastructure (BigQuery datasets, GCS buckets, and IAM roles) using **Terraform** to make the entire cloud environment replicable with a single command.
+
+### 5. Advanced Behavioral & Predictive Analysis
+* **The "AI Sentiment" Index:** Analyze the correlation between AI tool adoption and job satisfaction. Are developers who use AI tools (GitHub Copilot, ChatGPT) reporting higher productivity or increased job security concerns?
+* **"Desire vs. Reality" Gap:** Utilize the `LanguageHaveWorkedWith` vs. `LanguageWantToWorkWith` columns to map the "Migration Path" of developers. This identifies which legacy languages are losing talent and which emerging languages (e.g., Mojo, Rust) have the highest "intent-to-adopt."
+* **Educational ROI Analysis:** Compare salary benchmarks between traditional university graduates and self-taught/bootcamp developers to analyze the "Return on Investment" of formal engineering degrees in the current market.
+* **Workplace Dynamics & Productivity:** Correlation study between "Work Model" (Remote, Hybrid, In-person) and "Years of Experience" to determine if senior developers are driving the remote work trend more than juniors.
+
+---
+
 ## 🛠️ Setup & Deployment Guide
 
 Follow these steps to replicate the environment and execute the pipeline from scratch.
