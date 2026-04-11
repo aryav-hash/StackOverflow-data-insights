@@ -37,7 +37,18 @@ The project implements a robust data pipeline to handle the complexities of surv
 
 ---
 
-## ✨ Features & Details of the project
+## 🔬 Key Features
+
+* **Distributed Processing:** High-performance data cleaning and schema normalization (string-splitting and exploding) using **PySpark** on **Google Cloud Dataproc**.
+* **Cloud Data Warehousing:** Structured, managed storage in **Google Cloud BigQuery** with optimized **Clustering** to minimize query latency and costs.
+* **Analytics Engineering:** A robust, layered data modeling architecture (**Bronze ➔ Silver ➔ Gold**) implemented via **dbt Core**, ensuring data lineage and reliability.
+* **Orchestration & Automation:** Full lifecycle management of ephemeral cloud infrastructure using **Kestra**, allowing for cost-effective, event-driven pipeline execution.
+* **Strategic Insights UI:** Interactive **Looker Studio** command center featuring role-specific tech market share analysis and regional salary benchmarking.
+* **Quality Assurance:** Integrated data hardening using **dbt Tests** and custom SQL logic to identify and neutralize outliers and non-standard 'NA' values.
+
+---
+
+## ✨ Details of the project
  The data pipeline is based on batch processing using **ELT (Extract-Load-Transform) workflow**.
 
  ### Phase-1: IaC
@@ -70,7 +81,7 @@ The project implements a robust data pipeline to handle the complexities of surv
  After the execution of the script, we got two staging tables in our BigQuery named **stg_market_share_2025** and **stg_salary_exp_2025**. DBT CLI was used to connect to the BigQuery instance and in our models (dbt/analytics/models/staging) we wrote two models named stg_market_share.sql and stg_salary_exp.sql which contains tables that we planned through our script in phase-3. Using these we made the fct_salary_benchmark.sql and fct_tech_market_share.sql marts. In fct_salary_benchmark.sql we selected the records that had salary greater than $500 and also classified different experience groups based on the number of years the person had worked in the industry. Here the data was clustered by experience level and country. In fct_tech_market_share.sql we clustered the data by developer role and selected all the columns.
  By running **dbt build** we were able to get the specific models in the analytics dataset of our GCP.
  
- ![alt text](<screenshots/dbt.png>)
+ ![alt text](<screenshots/dbtgraph.png>)
 
  ### Phase-6: Building the charts in Looker Studio
  Since the analytics data had been setup, we went ahead and connected it to the Looker Studio of Google Cloud. Here after importing the data for representation two charts were made. The first chart made our of fct_tech_market share.sql is a column based bar chart that explores the market share of different languages for different roles in the industry. The second chart is a heatmap that shows the median salary for different experience groups of developers in different countries.
