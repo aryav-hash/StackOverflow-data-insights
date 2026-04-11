@@ -75,7 +75,7 @@ The project implements a robust data pipeline to handle the complexities of surv
  ### Phase-4: Building the staging tables
  The production script was used to generate the staging tables using the **Dataproc Serverless Cluster** in Google Cloud. Kestra automated this by executing another flow contained in **script_execution.yml** file. The production_script was made into a python script and then uploaded to the cloud for execution. There are various benefits of using the Dataproc Serverless Cluster on GCP. The storage and compute are separated in the Google Cloud which is better than a local cluster where the data lives on the same compute nodes. The cluster is ephemeral, meaning that it doesn't run 24/7 instead it only runs for the time when we need to do computation and then it shuts down. In order to use this service, we need to setup a service account with the relevant permissions. These were configured using the **gcloud CLI**.
 
- ![alt text](<screenshots/accountpermisssions.png>)
+ ![alt text](<screenshots/accountpermissions.png>)
 
  ### Phase-5: Using DBT to build the models
  After the execution of the script, we got two staging tables in our BigQuery named **stg_market_share_2025** and **stg_salary_exp_2025**. DBT CLI was used to connect to the BigQuery instance and in our models (dbt/analytics/models/staging) we wrote two models named stg_market_share.sql and stg_salary_exp.sql which contains tables that we planned through our script in phase-3. Using these we made the fct_salary_benchmark.sql and fct_tech_market_share.sql marts. In fct_salary_benchmark.sql we selected the records that had salary greater than $500 and also classified different experience groups based on the number of years the person had worked in the industry. Here the data was clustered by experience level and country. In fct_tech_market_share.sql we clustered the data by developer role and selected all the columns.
@@ -91,14 +91,53 @@ The project implements a robust data pipeline to handle the complexities of surv
  
  **Tile2**
  ![alt text](<screenshots/tile2.png>)
- 
-## 🚀 Getting Started
 
-### Prerequisites
-- Python 3.10+
-- Docker
+## 🛠️ Setup & Deployment Guide
 
-### Installation
-1. Clone the repo:
-   ```bash
-   git clone [https://github.com/username/project.git](https://github.com/username/project.git)
+Follow these steps to replicate the environment and execute the pipeline from scratch.
+
+### 1. Prerequisites
+* **Python 3.12+** (Managed via `uv`)
+* **Google Cloud CLI (gcloud)** authenticated to your account.
+* **A Google Cloud Project** with billing enabled.
+
+### 2. Infrastructure & Permissions Setup
+Run the following commands in your terminal to configure the necessary GCP resources and Service Account permissions.
+
+#### A. APIs, Service accounts/roles, and credentials
+```bash
+   gcloud services enable \
+      storage-component.googleapis.com \
+      bigquery.googleapis.com \
+      dataproc.googleapis.com
+      
+   # Create the Service Account
+   gcloud iam service-accounts create stackoverflow-loader --display-name="Stack Overflow Data Loader"
+
+   # Assign BigQuery Admin (For dbt and table creation)
+   gcloud projects add-iam-policy-binding [PROJECT_ID] \
+      --member="serviceAccount:stackoverflow-loader@[PROJECT_ID].iam.gserviceaccount.com" \
+      --role="roles/bigquery.admin"
+
+   # Assign Storage Admin (For GCS access)
+   gcloud projects add-iam-policy-binding [PROJECT_ID] \
+      --member="serviceAccount:stackoverflow-loader@[PROJECT_ID].iam.gserviceaccount.com" \
+      --role="roles/storage.admin"
+
+   # Assign Dataproc Editor (For Spark job execution)
+   gcloud projects add-iam-policy-binding [PROJECT_ID] \
+      --member="serviceAccount:stackoverflow-loader@[PROJECT_ID].iam.gserviceaccount.com" \
+      --role="roles/dataproc.editor"
+
+   gcloud iam service-accounts keys create keys/service-account-key.json \
+      --iam-account=stackoverflow-loader@[PROJECT_ID].iam.gserviceaccount.com
+
+   # Install dependencies
+   uv sync
+
+   # Activate virtual environment
+   source .venv/bin/activate
+
+```
+#### B. Setting dbt profile config
+
